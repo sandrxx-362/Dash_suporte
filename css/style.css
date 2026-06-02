@@ -478,7 +478,8 @@ body::before {
   font-weight: 500;
 }
 
-.num-col { text-align: right; font-variant-numeric: tabular-nums; }
+.num-col { text-align: center; font-variant-numeric: tabular-nums; }
+.data-table th.num-col { text-align: center; }
 
 .badge-pill {
   display: inline-flex;
