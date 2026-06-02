@@ -481,6 +481,11 @@ body::before {
 .num-col { text-align: center; font-variant-numeric: tabular-nums; }
 .data-table th.num-col { text-align: center; }
 
+/* Coluna Taxa Resolução */
+.data-table th:last-child { text-align: center; }
+.data-table td:last-child { text-align: center; }
+.data-table td:last-child .bar-wrap { justify-content: center; }
+
 .badge-pill {
   display: inline-flex;
   align-items: center;
