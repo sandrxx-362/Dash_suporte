@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Suporte Técnico — Maio 2025</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── Sidebar Overlay (mobile) ── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ════════════════════════ SIDEBAR ════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">📊</div>
+    <h1>Suporte Técnico</h1>
+    <span>Relatório Mensal</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Dashboard</div>
+    <a class="nav-item active" data-section="overview">
+      <span class="nav-icon">🏠</span> Visão Geral
+    </a>
+    <a class="nav-item" data-section="atendentes">
+      <span class="nav-icon">👥</span> Por Atendente
+    </a>
+    <a class="nav-item" data-section="fluxos">
+      <span class="nav-icon">🔀</span> Por Fluxo
+    </a>
+    <a class="nav-item" data-section="insights">
+      <span class="nav-icon">💡</span> Insights
+    </a>
+
+    <div class="nav-section-label" style="margin-top:16px">Gerenciamento</div>
+    <a class="nav-item" href="admin.html">
+      <span class="nav-icon">⚙️</span> Área Admin
+    </a>
+  </nav>
+
+  <div class="sidebar-period">
+    <div class="period-badge">
+      📅 <span id="periodLabel">01/05 a 31/05</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════════════ TOPBAR ════════════════════════ -->
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="hamburger" id="hamburger">☰</button>
+    <span class="topbar-title" id="topbarTitle">Visão Geral</span>
+  </div>
+  <div class="topbar-actions">
+    <a href="admin.html" class="btn-admin">⚙️ Administrar Dados</a>
+  </div>
+</header>
+
+<!-- ════════════════════════ MAIN ════════════════════════ -->
+<main class="main">
+
+  <!-- ══ SECTION: OVERVIEW ══ -->
+  <section class="section active" id="section-overview">
+    <div class="section-header">
+      <h2>Visão Geral de Atendimentos</h2>
+      <p>Período: <span id="periodText">01/05 a 31/05</span> · 5 Atendentes · Dados atualizados</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card c-cyan" id="kpi-registrados">
+        <div class="kpi-icon">📋</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">Total Registrados</div>
+        <div class="kpi-sub">—</div>
+      </div>
+      <div class="kpi-card c-purple" id="kpi-os">
+        <div class="kpi-icon">📁</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">OS Abertas</div>
+        <div class="kpi-sub">—</div>
+      </div>
+      <div class="kpi-card c-green" id="kpi-concluidas">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">Concluídas</div>
+        <div class="kpi-sub">—</div>
+      </div>
+      <div class="kpi-card c-red" id="kpi-abortados">
+        <div class="kpi-icon">❌</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">Abortados</div>
+        <div class="kpi-sub">—</div>
+      </div>
+      <div class="kpi-card c-amber" id="kpi-pendentes">
+        <div class="kpi-icon">⏳</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">Pendentes</div>
+        <div class="kpi-sub">—</div>
+      </div>
+      <div class="kpi-card c-teal" id="kpi-remotas">
+        <div class="kpi-icon">📡</div>
+        <div class="kpi-value">—</div>
+        <div class="kpi-label">Sol. Remotas</div>
+        <div class="kpi-sub">—</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot"></div> Atendimentos por Colaborador</div>
+          <span class="card-badge">Registrados vs Concluídos</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartAtendentes"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--purple)"></div> Volume por Fluxo</div>
+          <span class="card-badge">Distribuição</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartFluxos"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--green)"></div> Distribuição de Status</div>
+          <span class="card-badge">Composição Total</span>
+        </div>
+        <div class="chart-container short">
+          <canvas id="chartStatus"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--amber)"></div> Matriz · Filiais · Senha</div>
+          <span class="card-badge">Volume por Segmento</span>
+        </div>
+        <div class="chart-container short">
+          <canvas id="chartMatriz"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela Resumo Geral -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:var(--teal)"></div> Relatório Detalhado por Fluxo</div>
+        <span class="card-badge">Todos os Fluxos</span>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fluxo / Tópico</th>
+              <th class="num-col">Registrados</th>
+              <th class="num-col">OS Abertas</th>
+              <th class="num-col">Concluídas</th>
+              <th class="num-col">Abortados</th>
+              <th class="num-col">Pendentes</th>
+              <th class="num-col">Sol. Remota</th>
+              <th>Taxa Resolução</th>
+            </tr>
+          </thead>
+          <tbody id="resumoTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: ATENDENTES ══ -->
+  <section class="section" id="section-atendentes">
+    <div class="section-header">
+      <h2>Desempenho por Atendente</h2>
+      <p>Clique em um atendente para ver o detalhamento de fluxos</p>
+    </div>
+
+    <div class="atendente-grid" id="atendenteCards"></div>
+
+    <div class="charts-grid" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot"></div> Comparativo Geral (Radar)</div>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartAtendenteRadar"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--green)"></div> Taxa de Resolução</div>
+          <span class="card-badge">% Concluídas / Registradas</span>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartAtendenteTaxa"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" id="atendenteTableTitle"><div class="dot"></div> Detalhamento por Fluxo</div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fluxo / Tópico</th>
+              <th class="num-col">Registrados</th>
+              <th class="num-col">OS Abertas</th>
+              <th class="num-col">Concluídas</th>
+              <th class="num-col">Abortados</th>
+              <th class="num-col">Pendentes</th>
+              <th class="num-col">Sol. Remota</th>
+              <th>Taxa</th>
+            </tr>
+          </thead>
+          <tbody id="atendenteTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: FLUXOS ══ -->
+  <section class="section" id="section-fluxos">
+    <div class="section-header">
+      <h2>Análise por Fluxo / Tópico</h2>
+      <p>Filtre por atendente ou visualize o consolidado</p>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filtrar:</span>
+      <button class="filter-btn active" data-atendente="TODOS">Todos</button>
+      <button class="filter-btn" data-atendente="SANDRO">Sandro</button>
+      <button class="filter-btn" data-atendente="JULIANE">Juliane</button>
+      <button class="filter-btn" data-atendente="TIAGO">Tiago</button>
+      <button class="filter-btn" data-atendente="HYDELFRIDES">Hydelfrides</button>
+      <button class="filter-btn" data-atendente="MARIO">Mario</button>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot"></div> Volume de Registros por Fluxo</div>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartFluxoHbar"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--purple)"></div> Composição por Status</div>
+          <span class="card-badge">Consolidado Geral</span>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartFluxoStack"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION: INSIGHTS ══ -->
+  <section class="section" id="section-insights">
+    <div class="section-header">
+      <h2>Insights & Rankings</h2>
+      <p>Análise automática dos dados do período</p>
+    </div>
+
+    <!-- Rankings -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <div class="card-title"><div class="dot" style="background:var(--amber)"></div> Rankings do Período</div>
+      </div>
+      <div class="ranking-grid">
+        <div class="rank-item" id="rank-mais-reg">
+          <span class="rank-medal">🥇</span>
+          <div class="rank-info"><h4>—</h4><p>—</p></div>
+        </div>
+        <div class="rank-item" id="rank-melhor-taxa">
+          <span class="rank-medal">⭐</span>
+          <div class="rank-info"><h4>—</h4><p>—</p></div>
+        </div>
+        <div class="rank-item" id="rank-menos-reg">
+          <span class="rank-medal">📉</span>
+          <div class="rank-info"><h4>—</h4><p>—</p></div>
+        </div>
+        <div class="rank-item" id="rank-remota">
+          <span class="rank-medal">📡</span>
+          <div class="rank-info"><h4>—</h4><p>—</p></div>
+        </div>
+        <div class="rank-item" id="rank-top-fluxo" style="grid-column:span 2">
+          <span class="rank-medal">🔥</span>
+          <div class="rank-info"><h4>—</h4><p>—</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insights Observações -->
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-icon">📌</div>
+        <div class="insight-title">Perfil dos Atendimentos</div>
+        <div class="insight-text" id="insight-perfil">—</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-title">Principal Gargalo</div>
+        <div class="insight-text" id="insight-gargalo">—</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">📊</div>
+        <div class="insight-title">Eficiência Geral</div>
+        <div class="insight-text" id="insight-eficiencia">—</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🌐</div>
+        <div class="insight-title">Sem Internet</div>
+        <div class="insight-text" id="insight-internet">—</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🏢</div>
+        <div class="insight-title">Volume Matriz vs Filiais</div>
+        <div class="insight-text" id="insight-volume">—</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">👤</div>
+        <div class="insight-title">Top Atendentes</div>
+        <div class="insight-text" id="insight-top-atend">—</div>
+      </div>
+    </div>
+
+    <!-- Charts Insights -->
+    <div class="charts-grid">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot"></div> Comparativo Completo por Atendente</div>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartInsightComp"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="dot" style="background:var(--red)"></div> Pendentes & Abortados</div>
+          <span class="card-badge">Pontos de Atenção</span>
+        </div>
+        <div class="chart-container tall">
+          <canvas id="chartInsightProblemas"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Scripts ── -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/dashboard.js"></script>
+
+<script>
+  // Atualizar labels do período
+  document.addEventListener('DOMContentLoaded', () => {
+    const d = loadData();
+    if (d.periodo) {
+      document.getElementById('periodLabel').textContent = d.periodo;
+      document.getElementById('periodText').textContent = d.periodo;
+    }
+  });
+</script>
+</body>
+</html>

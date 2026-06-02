@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Dashboard Suporte Técnico</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ════════ TOPBAR ════════ -->
+<header class="admin-topbar">
+  <h1>⚙️ Área Administrativa <span class="pill">ADMIN</span></h1>
+  <div class="topbar-links">
+    <a href="index.html" class="btn btn-outline">← Voltar ao Dashboard</a>
+  </div>
+</header>
+
+<div class="admin-body">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="admin-sidebar">
+    <div class="admin-nav-label">Gerenciar</div>
+    <div class="admin-nav-item active" data-panel="periodo">📅 Período</div>
+    <div class="admin-nav-item" data-panel="atendentes">👥 Atendentes</div>
+    <div class="admin-nav-item" data-panel="fluxos">🔀 Fluxos por Atendente</div>
+    <div class="admin-nav-item" data-panel="geral">📋 Relatório Geral</div>
+    <div class="admin-nav-label" style="margin-top:16px">Sistema</div>
+    <div class="admin-nav-item" data-panel="reset">🔄 Restaurar Dados</div>
+  </aside>
+
+  <!-- ════════ CONTENT ════════ -->
+  <div class="admin-content">
+
+    <!-- ── PAINEL: PERÍODO ── -->
+    <div class="admin-panel active" id="panel-periodo">
+      <div class="panel-header">
+        <div>
+          <h2>📅 Configurar Período</h2>
+          <p>Defina o período exibido no dashboard</p>
+        </div>
+      </div>
+      <div class="form-card">
+        <h3>📝 Período do Relatório</h3>
+        <div class="form-grid" style="grid-template-columns: 1fr auto; align-items:end; gap:14px">
+          <div class="form-group">
+            <label class="form-label">Período (ex: 01/05 a 31/05)</label>
+            <input type="text" id="inputPeriodo" class="form-control" placeholder="01/05 a 31/05">
+          </div>
+          <button class="btn btn-primary" onclick="savePeriodo()">💾 Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAINEL: ATENDENTES ── -->
+    <div class="admin-panel" id="panel-atendentes">
+      <div class="panel-header">
+        <div>
+          <h2>👥 Gerenciar Atendentes</h2>
+          <p>Adicione, edite ou remova atendentes e seus totais</p>
+        </div>
+        <button class="btn btn-primary" onclick="openNewAtendente()">➕ Novo Atendente</button>
+      </div>
+
+      <div class="form-card">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Registrados</th>
+                <th>OS Abertas</th>
+                <th>Concluídas</th>
+                <th>Abortados</th>
+                <th>Pendentes</th>
+                <th>Sol. Remota</th>
+                <th>Taxa</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="atendenteAdminBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,200,212,0.05);border:1px solid rgba(0,200,212,0.15);border-radius:12px;padding:14px 18px;font-size:12px;color:var(--txt-3)">
+        💡 <strong style="color:var(--cyan)">Dica:</strong> Ao editar os detalhes de fluxo (menu "Fluxos por Atendente"), os totais do atendente são recalculados automaticamente.
+      </div>
+    </div>
+
+    <!-- ── PAINEL: FLUXOS POR ATENDENTE ── -->
+    <div class="admin-panel" id="panel-fluxos">
+      <div class="panel-header">
+        <div>
+          <h2>🔀 Fluxos por Atendente</h2>
+          <p>Edite os dados de cada fluxo individualmente</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label style="font-size:12px;color:var(--txt-2)">Atendente:</label>
+          <select id="selectAtendFluxo" class="form-control" style="width:160px" onchange="renderFluxoDetalheRows()">
+          </select>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3 id="fluxoDetalheTitle">📋 Fluxos</h3>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fluxo / Tópico</th>
+                <th>Registrados</th>
+                <th>OS Abertas</th>
+                <th>Concluídas</th>
+                <th>Abortados</th>
+                <th>Pendentes</th>
+                <th>Sol. Remota</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="fluxoDetalheBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAINEL: RELATÓRIO GERAL ── -->
+    <div class="admin-panel" id="panel-geral">
+      <div class="panel-header">
+        <div>
+          <h2>📋 Relatório Geral</h2>
+          <p>Gerencie os dados consolidados por fluxo</p>
+        </div>
+        <button class="btn btn-primary" onclick="openNewGeral()">➕ Novo Fluxo</button>
+      </div>
+
+      <div class="form-card">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fluxo / Tópico</th>
+                <th>Registrados</th>
+                <th>OS Abertas</th>
+                <th>Concluídas</th>
+                <th>Abortados</th>
+                <th>Pendentes</th>
+                <th>Sol. Remota</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="geralAdminBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PAINEL: RESET ── -->
+    <div class="admin-panel" id="panel-reset">
+      <div class="panel-header">
+        <div>
+          <h2>🔄 Restaurar Dados</h2>
+          <p>Volte aos dados originais da planilha</p>
+        </div>
+      </div>
+      <div class="danger-zone">
+        <h4>⚠️ Zona de Perigo</h4>
+        <p>Esta ação apagará todas as alterações feitas na área administrativa e restaurará os dados originais importados da planilha Excel. Esta operação não pode ser desfeita.</p>
+        <button class="btn btn-danger" onclick="confirmReset()">🔄 Restaurar Dados Originais</button>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</div><!-- /admin-body -->
+
+<!-- ══════════ MODAIS ══════════ -->
+
+<!-- Modal: Atendente -->
+<div class="modal-overlay" id="modalAtendente">
+  <div class="modal">
+    <h3 id="modalAtendTitle">Atendente</h3>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Nome do Atendente *</label>
+        <input type="text" id="atend-nome" class="form-control" placeholder="Ex: SANDRO">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Registrados</label>
+        <input type="number" id="atend-reg" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">OS Abertas</label>
+        <input type="number" id="atend-os" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Concluídas</label>
+        <input type="number" id="atend-con" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Abortados</label>
+        <input type="number" id="atend-abo" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pendentes</label>
+        <input type="number" id="atend-pen" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sol. Remota</label>
+        <input type="number" id="atend-rem" class="form-control" min="0" value="0">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveAtendente()">💾 Salvar</button>
+      <button class="btn btn-outline" onclick="closeModal('modalAtendente')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Fluxo Detalhe -->
+<div class="modal-overlay" id="modalFluxoDetalhe">
+  <div class="modal">
+    <h3 id="modalFluxoTitle">Editar Fluxo</h3>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Nome do Fluxo *</label>
+        <input type="text" id="fluxo-nome" class="form-control">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Registrados</label>
+        <input type="number" id="fluxo-reg" class="form-control" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">OS Abertas</label>
+        <input type="number" id="fluxo-os" class="form-control" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Concluídas</label>
+        <input type="number" id="fluxo-con" class="form-control" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Abortados</label>
+        <input type="number" id="fluxo-abo" class="form-control" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pendentes</label>
+        <input type="number" id="fluxo-pen" class="form-control" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sol. Remota</label>
+        <input type="number" id="fluxo-rem" class="form-control" min="0">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveFluxoDetalhe()">💾 Salvar</button>
+      <button class="btn btn-outline" onclick="closeModal('modalFluxoDetalhe')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Relatório Geral -->
+<div class="modal-overlay" id="modalGeral">
+  <div class="modal">
+    <h3 id="modalGeralTitle">Fluxo Geral</h3>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Fluxo / Tópico *</label>
+        <input type="text" id="geral-fluxo" class="form-control" placeholder="Ex: LENTIDÃO — MATRIZ">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Registrados</label>
+        <input type="number" id="geral-reg" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">OS Abertas</label>
+        <input type="number" id="geral-os" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Concluídas</label>
+        <input type="number" id="geral-con" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Abortados</label>
+        <input type="number" id="geral-abo" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pendentes</label>
+        <input type="number" id="geral-pen" class="form-control" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sol. Remota</label>
+        <input type="number" id="geral-rem" class="form-control" min="0" value="0">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveGeral()">💾 Salvar</button>
+      <button class="btn btn-outline" onclick="closeModal('modalGeral')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
